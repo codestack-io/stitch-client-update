@@ -16,10 +16,8 @@ import AllProductsLayout from "../Layouts/AllProductsLayout";
 import ProductDetails from "../Components/ProductDetails/ProductDetails";
 import PaymentSuccess from "../Pages/Payment/PaymentSuccess";
 import DashboardLayout from "../Layouts/DashboardLayout";
-import Sidebar from "../Components/Dashboard/Sidebar/Sidebar";
-import AdminRoute from "./AdminRoute";
-
-import ManageUsers from "../Components/Dashboard/Sidebar/Menu/Manageusers";
+;
+import AllOrders from "../Pages/Dashboard/AllOrders/AllOrders";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -117,18 +115,13 @@ export const router = createBrowserRouter([
 },
 {
   path:"/dashboard",
-  element:<DashboardLayout/>,
+  element:<PrivateRoutes><DashboardLayout/></PrivateRoutes>,
     children:[
-      {
-         path:"dashboard/sidebar",
-         element:<Sidebar/>,
-        
-      },
-      {
-        path:"manageusers",
-        element:<AdminRoute><ManageUsers /></AdminRoute>,
-         loader: () => fetch("http://localhost:5000/users"),
-      },
+    
+     {
+      path:"allorders",
+      element:<AllOrders/>,
+     }
       
 
     ]
