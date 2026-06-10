@@ -1,68 +1,120 @@
 :root {
+  /* =========================
+     DESIGN SYSTEM TOKENS
+  ========================= */
+
+  /* PRIMARY COLORS (MAX 3) */
+  --color-primary: #FF62BB;
+  --color-secondary: #B331F1;
+  --color-accent: #FF97D0;
+
+  /* NEUTRAL BACKGROUND (SOFT MODERN UI) */
+  --color-bg: #FFF7FB;
+  --color-surface: #ffffff;
+
+  /* TEXT */
+  --color-text: #1f1f1f;
+
+  /* SYSTEM */
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+}
 
-  font-synthesis: none;
+/* =========================
+   GLOBAL RESET (IMPORTANT FIX)
+========================= */
+body {
+  margin: 0;
+  min-height: 100vh;
+
+  /* ❌ removed flex (was breaking layout) */
+  display: block;
+
+  background: var(--color-bg);
+  color: var(--color-text);
+
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+/* ROOT WRAPPER */
+#root {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+/* =========================
+   LINKS
+========================= */
+a {
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  color: var(--color-secondary);
+  text-decoration: none;
 }
 
-@media (prefers-color-scheme: light) {
+a:hover {
+  color: var(--color-primary);
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  color: var(--color-text);
+}
+
+/* =========================
+   BUTTON BASE (SYSTEM RULE)
+========================= */
+button {
+  border-radius: 12px;
+  border: none;
+  padding: 0.6em 1.2em;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  background-color: var(--color-primary);
+  color: white;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background-color: var(--color-secondary);
+}
+
+/* =========================
+   DARK MODE (IMPORTANT)
+========================= */
+@media (prefers-color-scheme: dark) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --color-bg: #0f0f14;
+    --color-surface: #1a1a22;
+    --color-text: #f5f5f5;
   }
-  a:hover {
-    color: #747bff;
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
   }
+
+  a {
+    color: var(--color-accent);
+  }
+
   button {
-    background-color: #f9f9f9;
+    background-color: var(--color-primary);
+    color: white;
+  }
+
+  button:hover {
+    background-color: var(--color-secondary);
   }
 }

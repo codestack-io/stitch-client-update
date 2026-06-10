@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Logo from "../../../Components/Logo/Logo";
 import { Link, NavLink } from "react-router";
 import useAuth from "../../../Components/Hooks/useAuth";
+import Badge from "../../../Components/ui/Badge";
+import Modal from "../../../Components/ui/Modal";
 
 const Navbar = () => {
   const { logOut, user } = useAuth() || {};
+  const [open, setOpen] = useState(false);
 
   const handleLogout = () => {
     logOut?.()
-      .then(() => {})
+      .then(() => setOpen(false))
       .catch((error) => console.log(error));
   };
 
@@ -17,7 +20,7 @@ const Navbar = () => {
     "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800";
 
   const activeClass =
-    "bg-blue-600 text-white dark:bg-blue-500";
+    "bg-[#FF62BB] text-white";
 
   const Links = (
     <>
@@ -65,14 +68,11 @@ const Navbar = () => {
 
   return (
     <div className="navbar bg-white dark:bg-gray-900 shadow-md px-4 md:px-8">
-      
+
       {/* LEFT */}
       <div className="navbar-start">
         <div className="dropdown">
-          <button
-            tabIndex={0}
-            className="btn btn-ghost lg:hidden rounded-xl"
-          >
+          <button className="btn btn-ghost lg:hidden rounded-xl">
             ☰
           </button>
 
@@ -94,17 +94,24 @@ const Navbar = () => {
       {/* RIGHT */}
       <div className="navbar-end flex items-center gap-3">
 
+        {/* ✅ BADGE ADDED */}
+        {user && (
+          <Badge variant="accent">
+            Logged In
+          </Badge>
+        )}
+
         {user ? (
           <button
-            onClick={handleLogout}
-            className="px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 transition"
+            onClick={() => setOpen(true)}
+            className="px-4 py-2 rounded-xl bg-[#FF62BB] text-white text-sm font-medium hover:bg-[#B331F1] transition"
           >
             Logout
           </button>
         ) : (
           <Link
             to="/login"
-            className="px-4 py-2 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition"
+            className="px-4 py-2 rounded-xl bg-[#FF62BB] text-white text-sm font-medium hover:bg-[#B331F1] transition"
           >
             Login
           </Link>
@@ -125,6 +132,13 @@ const Navbar = () => {
           </p>
         </div>
       </div>
+
+      {/* ✅ MODAL */}
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        onConfirm={handleLogout}
+      />
     </div>
   );
 };
