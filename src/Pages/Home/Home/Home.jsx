@@ -129,7 +129,7 @@ const Home = () => {
       Join thousands of users using our platform
     </p>
 
-    <Link to="/Auth/Register">
+    <Link to="/Register">
       <button className="px-6 py-3 rounded-xl bg-[#FF62BB] text-white font-medium">
         Get Started Now
       </button>

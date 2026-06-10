@@ -1,66 +1,133 @@
-import React from 'react';
-import { useLoaderData,useNavigate } from 'react-router';
-import { AuthContext } from '../Context/AuthContext/AuthContext';
+import React, { useState, useEffect } from "react";
+import { useLoaderData, useNavigate, Link } from "react-router";
 import { useContext } from "react";
-
+import { AuthContext } from "../Context/AuthContext/AuthContext";
 
 const ProductDetails = () => {
+  const navigate = useNavigate();
+  const { user, role } = useContext(AuthContext);
 
- const navigate = useNavigate();
-  
-    
-    const {user,role} = useContext(AuthContext);
-     const data = useLoaderData();
+  const data = useLoaderData();
   const model = data?.result;
-  console.log(user);
 
-  const canOrder = user && role !== "admin" && role !== "manager";
+  const [activeImage, setActiveImage] = useState(0);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   if (!model) return <p>Loading...</p>;
 
-  return (
-    <div className="w-270 h-160 mx-auto p-4 md:p-6 lg:p-8">
-      <div className="card bg-base-100 h-full shadow-xl border rounded-2xl">
-        <div className="flex flex-col md:flex-row gap-8 p-6">
+  const canOrder = user && role !== "admin" && role !== "manager";
 
-          <div className="md:w-1/2">
+  const images = model.images?.length
+    ? model.images
+    : [model.productImage];
+
+  // FETCH RELATED PRODUCTS
+  useEffect(() => {
+    const fetchRelated = async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/products/related/${model._id}`
+        );
+        const data = await res.json();
+        setRelatedProducts(data?.result || []);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (model?._id) fetchRelated();
+  }, [model?._id]);
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-10">
+
+      {/* PRODUCT SECTION */}
+      <div className="grid md:grid-cols-2 gap-10">
+
+        {/* IMAGES */}
+        <div>
+          <div className="h-[400px] rounded-xl overflow-hidden border">
             <img
-              src={model.productImage}
-              alt={model.productName}
-              className="w-full h-full object-cover rounded-xl"
+              src={images[activeImage]}
+              className="w-full h-full object-cover"
             />
           </div>
 
-          <div className="md:w-1/2 space-y-4">
-            <h1 className="text-3xl font-bold">{model.productName}</h1>
-
-            <div className="flex gap-2">
-              <div className="badge badge-outline">
-                Quantity: {model.availableQuantity}
-              </div>
-              <div className="badge badge-outline">
-                {model.category}
-              </div>
-              <div className="badge badge-outline">
-                Status: {model.Status}
-              </div>
-            </div>
-
-            <p className="text-lg font-medium">
-              Price: {model.price} tk
-            </p>
-
-            <button
-              disabled={!canOrder}
-              className="btn btn-primary"
-              onClick={() => navigate(`/neworder/${model._id}`)}
-            >
-              Order / Book
-            </button>
-
+          <div className="flex gap-2 mt-3">
+            {images.map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                onClick={() => setActiveImage(i)}
+                className={`w-16 h-16 object-cover cursor-pointer border ${
+                  activeImage === i ? "border-pink-500" : ""
+                }`}
+              />
+            ))}
           </div>
         </div>
+
+        {/* INFO */}
+        <div className="space-y-4">
+          <h1 className="text-3xl font-bold">{model.productName}</h1>
+
+          <p className="text-xl text-pink-500 font-semibold">
+            {model.price} Tk
+          </p>
+
+          <p>{model.description}</p>
+
+          <div className="space-y-1 text-sm">
+            <p>Category: {model.category}</p>
+            <p>Status: {model.Status}</p>
+            <p>Stock: {model.availableQuantity}</p>
+          </div>
+
+          <button
+            disabled={!canOrder}
+            onClick={() => navigate(`/neworder/${model._id}`)}
+            className="w-full bg-pink-500 text-white py-2 rounded-lg disabled:opacity-50"
+          >
+            Order Now
+          </button>
+        </div>
       </div>
+
+      {/* RELATED PRODUCTS */}
+      <div className="mt-16">
+        <h2 className="text-2xl font-bold mb-4">
+          Related Products
+        </h2>
+
+        {relatedProducts.length === 0 ? (
+          <p>No related products</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {relatedProducts.map((item) => (
+              <div key={item._id} className="border p-3 rounded-xl">
+                <img
+                  src={item.productImage}
+                  className="h-32 w-full object-cover rounded"
+                />
+
+                <h3 className="font-semibold mt-2">
+                  {item.productName}
+                </h3>
+
+                <p>{item.price} Tk</p>
+
+                <Link
+                  to={`/product-details/${item._id}`}
+                  className="text-pink-500 text-sm"
+                >
+                  View Details
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };

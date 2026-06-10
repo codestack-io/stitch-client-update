@@ -86,7 +86,23 @@ export const router = createBrowserRouter([
   return res.json();
 }
 
-      }
+
+      },
+      {
+  path: "/product-details/:id",
+  element: <ProductDetails />,
+  loader: async ({ params }) => {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_URL}/products/${params.id}`
+    );
+
+    if (!res.ok) {
+      throw new Response("Product not found", { status: res.status });
+    }
+
+    return res.json();
+  }
+}
     ]
   },
     
