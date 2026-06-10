@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLoaderData, useNavigate, Link } from "react-router";
-import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext/AuthContext";
+import Navbar from "../../Pages/Shared/Navbar/Navbar";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
@@ -21,7 +21,6 @@ const ProductDetails = () => {
     ? model.images
     : [model.productImage];
 
-  // FETCH RELATED PRODUCTS
   useEffect(() => {
     const fetchRelated = async () => {
       try {
@@ -39,95 +38,101 @@ const ProductDetails = () => {
   }, [model?._id]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
+    <div>
 
-      {/* PRODUCT SECTION */}
-      <div className="grid md:grid-cols-2 gap-10">
+      {/* ✅ NAVBAR ADDED HERE */}
+      <Navbar></Navbar>
 
-        {/* IMAGES */}
-        <div>
-          <div className="h-[400px] rounded-xl overflow-hidden border">
-            <img
-              src={images[activeImage]}
-              className="w-full h-full object-cover"
-            />
-          </div>
+      <div className="max-w-6xl mx-auto px-4 py-10">
 
-          <div className="flex gap-2 mt-3">
-            {images.map((img, i) => (
+        {/* PRODUCT SECTION */}
+        <div className="grid md:grid-cols-2 gap-10">
+
+          {/* IMAGES */}
+          <div>
+            <div className="h-[400px] rounded-xl overflow-hidden border">
               <img
-                key={i}
-                src={img}
-                onClick={() => setActiveImage(i)}
-                className={`w-16 h-16 object-cover cursor-pointer border ${
-                  activeImage === i ? "border-pink-500" : ""
-                }`}
+                src={images[activeImage]}
+                className="w-full h-full object-cover"
               />
-            ))}
-          </div>
-        </div>
+            </div>
 
-        {/* INFO */}
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold">{model.productName}</h1>
-
-          <p className="text-xl text-pink-500 font-semibold">
-            {model.price} Tk
-          </p>
-
-          <p>{model.description}</p>
-
-          <div className="space-y-1 text-sm">
-            <p>Category: {model.category}</p>
-            <p>Status: {model.Status}</p>
-            <p>Stock: {model.availableQuantity}</p>
-          </div>
-
-          <button
-            disabled={!canOrder}
-            onClick={() => navigate(`/neworder/${model._id}`)}
-            className="w-full bg-pink-500 text-white py-2 rounded-lg disabled:opacity-50"
-          >
-            Order Now
-          </button>
-        </div>
-      </div>
-
-      {/* RELATED PRODUCTS */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold mb-4">
-          Related Products
-        </h2>
-
-        {relatedProducts.length === 0 ? (
-          <p>No related products</p>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {relatedProducts.map((item) => (
-              <div key={item._id} className="border p-3 rounded-xl">
+            <div className="flex gap-2 mt-3">
+              {images.map((img, i) => (
                 <img
-                  src={item.productImage}
-                  className="h-32 w-full object-cover rounded"
+                  key={i}
+                  src={img}
+                  onClick={() => setActiveImage(i)}
+                  className={`w-16 h-16 object-cover cursor-pointer border ${
+                    activeImage === i ? "border-pink-500" : ""
+                  }`}
                 />
-
-                <h3 className="font-semibold mt-2">
-                  {item.productName}
-                </h3>
-
-                <p>{item.price} Tk</p>
-
-                <Link
-                  to={`/product-details/${item._id}`}
-                  className="text-pink-500 text-sm"
-                >
-                  View Details
-                </Link>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        )}
-      </div>
 
+          {/* INFO */}
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold">{model.productName}</h1>
+
+            <p className="text-xl text-pink-500 font-semibold">
+              {model.price} Tk
+            </p>
+
+            <p>{model.description}</p>
+
+            <div className="space-y-1 text-sm">
+              <p>Category: {model.category}</p>
+              <p>Status: {model.Status}</p>
+              <p>Stock: {model.availableQuantity}</p>
+            </div>
+
+            <button
+              disabled={!canOrder}
+              onClick={() => navigate(`/neworder/${model._id}`)}
+              className="w-full bg-pink-500 text-white py-2 rounded-lg disabled:opacity-50"
+            >
+              Order Now
+            </button>
+          </div>
+        </div>
+
+        {/* RELATED PRODUCTS */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold mb-4">
+            Related Products
+          </h2>
+
+          {relatedProducts.length === 0 ? (
+            <p>No related products</p>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {relatedProducts.map((item) => (
+                <div key={item._id} className="border p-3 rounded-xl">
+                  <img
+                    src={item.productImage}
+                    className="h-32 w-full object-cover rounded"
+                  />
+
+                  <h3 className="font-semibold mt-2">
+                    {item.productName}
+                  </h3>
+
+                  <p>{item.price} Tk</p>
+
+                  <Link
+                    to={`/product-details/${item._id}`}
+                    className="text-pink-500 text-sm"
+                  >
+                    View Details
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   );
 };
