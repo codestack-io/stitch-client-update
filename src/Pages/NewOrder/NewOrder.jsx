@@ -1,251 +1,198 @@
-import React, { useEffect } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import Navbar from '../Shared/Navbar/Navbar';
 import Footer from '../Shared/Footer/Footer';
-import { useForm,useWatch } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import Container from '../Shared/Container/Container';
-import { Navigate, useLoaderData, useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 import UseAuth from '../../Components/Hooks/useAuth';
-// import axios from 'axios';
-// import { useNavigate } from "react-router-dom";
 import useAxiosSecure from '../../Components/Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
 
-
-
-
-
-
 const NewOrder = () => {
+  const { id } = useParams();
+  const [model, setModel] = useState(null);
 
- const model = useLoaderData();
- console.log(model);
+  const { user } = UseAuth();
+  const axiosSecure = useAxiosSecure();
 
-//  const navigate = useNavigate();
- const {user} = UseAuth();
- const { register, handleSubmit, control,   setValue,formState: { errors } } = useForm();
- useEffect(() => {
-  if (user?.email) {
-    setValue("email", user.email);
-  }
-}, [user, setValue]);
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    formState: { errors }
+  } = useForm();
 
-
-
- const axiosSecure = useAxiosSecure();
- const navigate = useNavigate(); 
- 
-
-const quantity =
-  Number(useWatch({ control, name: "orderQuantity" })) ||
-  Number(model?.result?.minimumOrder);
-  const price = Number(model?.result?.price) || 0;
-
- const totalPrice = quantity * price;
- console.log(totalPrice);
-
- const handleNewOrder = (data) => {
-   const orderData = {
-    ...data,
-    orderprice: totalPrice, // Add it manually
-  };
-  console.log('Form data',orderData)
-  
-
- 
-  Swal.fire({
-    title: 'Confirm Payment',
-    text: `You have to pay ${totalPrice} taka`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, Pay Now',
-  }).then(async () => {
-      const res = await axiosSecure.post('/neworder', orderData);
-      console.log('after saving order', res.data);
-      if(res.data.insertedId){
-        navigate('/dashboard/neworder')
-        Swal.fire({
-  position: "top-end",
-  icon: "success",
-  title: "Order has created.Please pay",
-  showConfirmButton: false,
-  timer: 1500
-});
+  // FETCH PRODUCT
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axiosSecure.get(`/products/${id}`);
+        setModel(res.data.result);
+      } catch (err) {
+        console.log(err);
       }
-   
+    };
+
+    if (id) fetchProduct();
+  }, [id]);
+
+  // AUTO EMAIL
+  useEffect(() => {
+    if (user?.email) {
+      setValue("email", user.email);
+    }
+  }, [user, setValue]);
+
+  const watchedQuantity = useWatch({
+    control,
+    name: "orderQuantity",
   });
-};
 
+  const quantity = Number(watchedQuantity || model?.minimumOrder || 1);
+  const price = Number(model?.price || 0);
+  const totalPrice = quantity * price;
 
-  
+  if (!model) {
+    return <div className="p-10 text-center">Loading product...</div>;
+  }
 
+  // ✅ FIXED STRIPE FLOW
+  const handleNewOrder = async (data) => {
+    const confirmed = await Swal.fire({
+      title: 'Confirm Order',
+      text: `You will pay ${totalPrice} taka for this order`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Pay Now',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#22c55e',
+      cancelButtonColor: '#ef4444',
+      background: '#0f172a',
+      color: '#fff',
+    });
 
+    if (!confirmed.isConfirmed) return;
 
-    
-return(
-        <Container>
-       <div>
-            <section>
-                <Navbar></Navbar>
-            </section>
-            <div>
-             <h2 className='text-2xl font-bold text-amber-950'>Create new order </h2>
-             <form onSubmit={handleSubmit(handleNewOrder)}
-             
-             className='mt-5 p-4 text-black' >
-                
-            <div>
-                  <label className="label">
-                    <input type="radio"
-                      {...register('ProductType',{ required: "Product type is required" })}
-                    value="document" className="radio" />
-                    Document</label>
-                    {errors?.ProductType && (
-                   <p className="text-red-500">{errors.ProductType.message}</p>
-                  )}
-            </div>
-               <div>
-                  <label className="label">
-                    <input type="radio"
-                      {...register('ProductType',{ required: "Product type is required" })}
-                    value="non-document" className="radio"  />
-                    Non-Document</label>
-                    
-            </div>
-            <div className='grid grid-cols-3 gap-2'>
-              <fieldset className="fieldset">
-          <label className="label">Email</label>
-         <input
-  type="email"
-  {...register("email", { required: "Email is required" })}
-  className="input"
-/>
+    try {
+      const res = await axiosSecure.post('/create-checkout-session', {
+        productName: model.productName,
+        price: totalPrice,
+        senderEmail: data.email,
+        productId: id,   // ✅ FIXED (important)
+      });
 
-{errors.email && (
-  <p className="text-red-500 text-sm">{errors.email.message}</p>
-)}
-
-          </fieldset>
-
-           <fieldset className="fieldset">
-          <label className="label">Product Name</label> 
-          <input type="text"{...register('productName')} className="input" placeholder="Product Name"   defaultValue={model?.result?.productName} />
-          </fieldset>
-
-           <fieldset className="fieldset">
-          <label className="label">Product Status</label> 
-          <input type="text"{...register('productStatus')} className="input" placeholder="Product Status"   defaultValue={model?.result?.Status} />
-          </fieldset>
-
-          
-           
-           <fieldset className="fieldset">
-          <label className="label">First Name</label>
-          <input type="text"{...register('firstName')} className="input" placeholder="First Name" />
-          </fieldset>
-          
-           <fieldset className="fieldset">
-          <label className="label">Last Name</label>
-          <input type="text"{...register('lastName')} className="input" placeholder="Last Name" />
-          </fieldset>
-           
-          
-
-
-
-                   <label className="form-control w-full">
-                    <span className="label-text text-gray-400 w-40">Payment Method</span>
-                   <select
-                  {...register("paymentMethod", { required: true })}
-                   className="select select-bordered w-full"
-                     >
-             
-                <option value="">Select Method</option>
-                <option value="Bkash" className='flex'>
-              
-                  Bkash
-                  </option>
-                <option value="Nagad" className='flex'>
-                 
-                Nagad
-                </option>
-                <option value="COD" className='flex'>
-                  
-                Cash On Delivery
-                </option>
-               </select>
-               {errors.paymentMethod && (
-  <p className="text-red-500 text-sm">{errors.paymentMethod.message}</p>
-)}
-                </label>
-        
-<fieldset className="fieldset">
-  <label className="label font-semibold">Order Quantity</label>
-
-  <input
-    type="number"
-    className="input input-bordered w-full"
-    defaultValue={model?.result?.minimumOrder}
-    {...register("orderQuantity", {
-      required: "Quantity is required",
-      min: {
-        value: model?.result?.minimumOrder,
-        message: `Minimum order is ${model?.result?.minimumOrder}`
-      },
-      max: {
-        value: model?.result?.availableQuantity,
-        message: `Maximum available quantity is ${model?.result?.availableQuantity}`
+      if (res.data.url) {
+        window.location.href = res.data.url;
+      } else {
+        Swal.fire('Error', 'Stripe session failed', 'error');
       }
-    })}
-  />
+    } catch (err) {
+      console.log(err);
+      Swal.fire('Error', 'Payment initiation failed', 'error');
+    }
+  };
 
-  {errors.orderQuantity && (
-    <p className="text-red-500 text-sm">
-      {errors.orderQuantity.message}
-    </p>
-  )}
-</fieldset>
+  return (
+    <Container>
+      <Navbar />
 
-<fieldset className="fieldset">
-  <label className="label font-semibold">Order Price</label>
+      <h2 className="text-2xl font-bold text-amber-950">
+        Create new order
+      </h2>
 
-  <input
-    type="text"
-    readOnly
-    className="input input-bordered w-full bg-gray-100"
-    value={`${totalPrice} tk`}
-  />
-</fieldset>
-{/* <fieldset className="fieldset"> 
-  <label className="label font-semibold">Order Price</label> 
-  <input type="text"{...register('orderprice', { valueAsNumber: true })} className="input input-bordered w-full bg-gray-100" value = {totalPrice} /> </fieldset> */}
+      <form onSubmit={handleSubmit(handleNewOrder)} className="mt-5 p-4 text-black">
 
+        {/* PRODUCT TYPE */}
+        <div>
+          <label className="label">
+            <input
+              type="radio"
+              value="document"
+              {...register('ProductType', { required: "Product type is required" })}
+              className="radio"
+            />
+            Document
+          </label>
 
+          <label className="label">
+            <input
+              type="radio"
+              value="non-document"
+              {...register('ProductType', { required: "Product type is required" })}
+              className="radio"
+            />
+            Non-Document
+          </label>
 
-
-   <fieldset className="fieldset">
-  <label className="label">Delivery Address</label> 
-  <input type="text"{...register('deliveryAddress')} className="input" placeholder="Delivery Address" />
-  </fieldset>
-
-
-
-
-            </div>
-
-            <input type='submit'
-            className="btn btn-primary text-black" value="Create Order" />
-             
-             </form>
-            
-
-            </div>
-            <section>
-                <Footer></Footer>
-            </section>
+          {errors.ProductType && (
+            <p className="text-red-500">{errors.ProductType.message}</p>
+          )}
         </div>
-         </Container>
-    );
+
+        <div className="grid grid-cols-3 gap-2">
+
+          {/* EMAIL */}
+          <fieldset className="fieldset">
+            <label>Email</label>
+            <input type="email" {...register("email", { required: true })} className="input" />
+          </fieldset>
+
+          {/* PRODUCT NAME */}
+          <fieldset className="fieldset">
+            <label>Product Name</label>
+            <input value={model.productName} readOnly className="input bg-gray-100" />
+          </fieldset>
+
+          {/* STATUS */}
+          <fieldset className="fieldset">
+            <label>Status</label>
+            <input value={model.Status} readOnly className="input bg-gray-100" />
+          </fieldset>
+
+          {/* FIRST NAME */}
+          <input {...register('firstName')} placeholder="First Name" className="input" />
+
+          {/* LAST NAME */}
+          <input {...register('lastName')} placeholder="Last Name" className="input" />
+
+          {/* PAYMENT METHOD */}
+          <select {...register("paymentMethod", { required: true })} className="select">
+            <option value="">Select Method</option>
+            <option value="Bkash">Bkash</option>
+            <option value="Nagad">Nagad</option>
+            <option value="COD">Cash On Delivery</option>
+          </select>
+
+          {/* QUANTITY */}
+          <input
+            type="number"
+            defaultValue={model.minimumOrder}
+            {...register("orderQuantity", {
+              required: true,
+              min: model.minimumOrder,
+              max: model.availableQuantity,
+            })}
+            className="input"
+          />
+
+          {/* PRICE */}
+          <input value={`${totalPrice} tk`} readOnly className="input bg-gray-100" />
+
+          {/* ADDRESS */}
+          <input {...register('deliveryAddress')} placeholder="Address" className="input" />
+        </div>
+
+        <input
+          type="submit"
+          value="Create Order"
+          className="btn btn-primary mt-4"
+        />
+      </form>
+
+      <Footer />
+    </Container>
+  );
 };
 
 export default NewOrder;

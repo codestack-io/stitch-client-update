@@ -27,17 +27,21 @@ const useAxiosSecure = () => {
     );
 
     // Response interceptor
-    const resInterceptor = axiosSecure.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        const statusCode = error.response?.status;
-        if (statusCode === 401 || statusCode === 403) {
-          console.log('Unauthorized or Forbidden. Logging out...');
-          logOut().then(() => navigate('/login'));
-        }
-        return Promise.reject(error);
-      }
-    );
+   const resInterceptor = axiosSecure.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const statusCode = error.response?.status;
+
+    if (statusCode === 401 || statusCode === 403) {
+      console.log('Auth failed → logging out user');
+
+      await logOut();
+      navigate('/login', { replace: true });
+    }
+
+    return Promise.reject(error);
+  }
+);
 
     return () => {
       axiosSecure.interceptors.request.eject(reqInterceptor);

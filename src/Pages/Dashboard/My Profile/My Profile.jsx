@@ -1,45 +1,68 @@
-import { useNavigate } from 'react-router-dom';
-import UseAuth from '../../../Components/Hooks/useAuth';
-import Swal from 'sweetalert2';
+import React, { useState } from "react";
+import UseAuth from "../../../Components/Hooks/useAuth";
+import useAxiosSecure from "../../../Components/Hooks/useAxiosSecure";
 
 const MyProfile = () => {
-  const { user, logOut } = UseAuth();
-  const navigate = useNavigate();
+  const { user } = UseAuth();
+  const axiosSecure = useAxiosSecure();
 
-  const handleLogout = async () => {
-    try {
-      await logOut();
-      Swal.fire('Logged out', 'You have been logged out successfully', 'success');
-      navigate('/login');
-    } catch (err) {
-      Swal.fire('Error', 'Failed to logout', 'error');
-    }
+  const [name, setName] = useState(user?.displayName || "");
+  const [photo, setPhoto] = useState(null);
+  const [password, setPassword] = useState("");
+
+  const handleUpdate = async () => {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("photo", photo);
+
+    await axiosSecure.patch("/users/update-profile", formData);
+    alert("Profile updated");
+  };
+
+  const handlePassword = async () => {
+    await axiosSecure.patch("/users/update-password", {
+      password,
+    });
+    alert("Password updated");
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6">
-      <div className="flex flex-col items-center">
-        <img
-          src={user?.photoURL || 'https://i.ibb.co/MBtjqXQ/avatar.png'}
-          alt="Profile"
-          className="w-24 h-24 rounded-full mb-4"
-        />
+    <div className="p-6 bg-white">
 
-        <h2 className="text-xl font-semibold">{user?.displayName || 'N/A'}</h2>
-        <p className="text-gray-600">{user?.email}</p>
+      <h2 className="text-xl font-bold mb-4">Profile</h2>
 
-        <div className="mt-4 w-full">
-          <p><strong>Role:</strong>{user?.role}</p>
-          <p><strong>Account Status:</strong> Active</p>
-        </div>
+      {/* NAME */}
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className="input mb-3"
+      />
 
-        <button
-          onClick={handleLogout}
-          className="btn btn-error mt-6 w-full"
-        >
-          Logout
-        </button>
-      </div>
+      {/* IMAGE */}
+      <input
+        type="file"
+        onChange={(e) => setPhoto(e.target.files[0])}
+        className="mb-3"
+      />
+
+      <button onClick={handleUpdate} className="btn btn-primary">
+        Update Profile
+      </button>
+
+      <hr className="my-4" />
+
+      {/* PASSWORD */}
+      <input
+        type="password"
+        placeholder="New Password"
+        onChange={(e) => setPassword(e.target.value)}
+        className="input mb-3"
+      />
+
+      <button onClick={handlePassword} className="btn btn-warning">
+        Change Password
+      </button>
+
     </div>
   );
 };
