@@ -6,10 +6,14 @@ import Login from "../Pages/Auth/Login/page";
 import Register from "../Pages/Auth/Register/page";
 import ServicesSection from "../Pages/Servicesection/Servicesection";
 import ErrorPage from "../Pages/Errorpage/Errorpage";
-
+import Overview from "../Pages/Dashboard/Overviews/Overviews";
+import MyItems from "../Pages/Dashboard/My Items/My Items";
+import Reports from "../Pages/Dashboard/Reports/Reports";
+import Categories from "../Pages/Dashboard/Categories/Categories";
+import Orders from "../Pages/Dashboard/AllOrders/AllOrders";
 import NewOrder from "../Pages/NewOrder/NewOrder";
 import PrivateRoutes from "./PrivateRoutes";
-
+import ManageItems from "../Pages/Dashboard/AllOrders/AllOrders";
 import AllProductsLayout from "../Layouts/AllProductsLayout";
 import ProductDetails from "../Components/ProductDetails/ProductDetails";
 import DashboardLayout from "../Layouts/DashboardLayout";
@@ -150,6 +154,10 @@ export const router = createBrowserRouter([
         path: "manageusers",
         element: <ManageUsers />,
       },
+       {
+        path: "allproducts",
+        element: <ManageItems />,
+      },
       {
         path: "payment/:id",
         element: <Payment />,
@@ -174,6 +182,26 @@ export const router = createBrowserRouter([
         path: "myprofile",
         element: <MyProfile />,
       },
+      {
+  path: "overview",
+  element: <Overview />,
+},
+{
+  path: "my-items",
+  element: <MyItems />,
+},
+{
+  path: "reports",
+  element: <Reports />,
+},
+{
+  path: "categories",
+  element: <Categories />,
+},
+{
+  path: "allorders",
+  element: <Orders />,
+},
     ],
   },
 ]);

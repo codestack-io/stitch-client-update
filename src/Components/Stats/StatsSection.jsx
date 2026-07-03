@@ -11,6 +11,7 @@ const StatsSection = () => {
       .then((data) => setStats(data))
       .catch((err) => console.error(err));
   }, []);
+  console.log(stats);
 
   if (!stats) return null; // or loading UI
 

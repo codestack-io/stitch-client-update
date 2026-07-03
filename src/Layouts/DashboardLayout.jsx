@@ -70,7 +70,7 @@ const DashboardLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/dashboard/manage-items">
+                <NavLink to="/dashboard/allproducts">
                   <MdOutlineProductionQuantityLimits /> Manage Items
                 </NavLink>
               </li>
@@ -90,7 +90,7 @@ const DashboardLayout = () => {
               </li>
 
               <li>
-                <NavLink to="/dashboard/payment-history">
+                <NavLink to="/dashboard/paymenthistory">
                   <FaCreditCard /> Payments
                 </NavLink>
               </li>

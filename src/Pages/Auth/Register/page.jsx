@@ -57,11 +57,15 @@ const Register = () => {
       };
 
       // 4. Save to DB
-      const res = await axiosSecure.post("/users", userInfo);
+     
+const res = await axios.post(
+  `${import.meta.env.VITE_API_URL}/users`,
+  userInfo
+);
 
-      if (res.data.insertedId) {
-        toast.success("User created successfully");
-      }
+if (res.data.success) {
+  toast.success("User created successfully");
+}
 
       // 5. Update Firebase profile
       await updateUserProfile({
