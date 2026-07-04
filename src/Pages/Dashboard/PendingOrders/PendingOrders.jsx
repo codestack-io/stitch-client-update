@@ -24,23 +24,27 @@ const PendingOrders = () => {
         
         }
     });
-       const handleUpdateStatus = (allorder, productStatus) => {
-  const updateInfo = { status: productStatus, email: user.email };
+     const handleUpdateStatus = async (allorder, productStatus) => {
+  const updateInfo = {
+    status: productStatus,
+    email: user.email,
+  };
 
-  axiosSecure.patch(`/allorders/${allorder._id}`, updateInfo)
-    .then(res => {
-      if (res.data.modifiedCount) {
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: `Status set to ${productStatus}`,
-          showConfirmButton: false,
-          timer: 2000
-        });
-        handleUpdateStatus(order, "Approved"); 
-        refetch(); 
-      }
+  const res = await axiosSecure.patch(
+    `/allorders/${allorder._id}`,
+    updateInfo
+  );
+
+  if (res.data.modifiedCount) {
+    Swal.fire({
+      icon: "success",
+      title: `${productStatus} Successfully`,
+      timer: 1500,
+      showConfirmButton: false,
     });
+
+    refetch();
+  }
 };
 
          const modalRef = useRef(null);
@@ -127,7 +131,7 @@ const PendingOrders = () => {
       <button
         className="btn btn-success"
         onClick={() => {
-          handleUpdateStatus(order, "Approve");
+          handleUpdateStatus(order, "Approved");
           modalRef.current.close();
         }}
       >

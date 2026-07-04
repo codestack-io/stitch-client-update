@@ -37,78 +37,85 @@ const DashboardLayout = () => {
 
         <ul className="menu p-4 w-64 bg-base-200 min-h-full">
 
-          {/* ================= USER MENU ================= */}
-          <li className="menu-title">User Panel</li>
+         {/* USER MENU */}
+<li className="menu-title">User Panel</li>
 
-          <li>
-            <NavLink to="/dashboard/overview">📊 Overview</NavLink>
-          </li>
+<li>
+  <NavLink to="/dashboard/overview">📊 Overview</NavLink>
+</li>
 
-          <li>
-            <NavLink to="/dashboard/my-items">📦 My Items</NavLink>
-          </li>
+<li>
+  <NavLink to="/dashboard/my-items">📦 My Items</NavLink>
+</li>
 
-          <li>
-            <NavLink to="/dashboard/myprofile">
-              <MdAccountCircle /> My Profile
-            </NavLink>
-          </li>
+<li>
+  <NavLink to="/dashboard/myprofile">
+    <MdAccountCircle /> My Profile
+  </NavLink>
+</li>
 
-          <li>
-            <NavLink to="/dashboard/settings">⚙️ Settings</NavLink>
-          </li>
+<li>
+  <NavLink to="/dashboard/settings">⚙️ Settings</NavLink>
+</li>
 
-          {/* ================= ADMIN MENU ================= */}
-          {role === "admin" && (
-            <>
-              <li className="menu-title">Admin Panel</li>
+{/* ADMIN MENU */}
+{role === "admin" && (
+  <>
+    <li className="menu-title">Admin Panel</li>
 
-              <li>
-                <NavLink to="/dashboard/manageusers">
-                  <GrUserManager /> Manage Users
-                </NavLink>
-              </li>
+    <li>
+      <NavLink to="/dashboard/manageusers">
+        <GrUserManager /> Manage Users
+      </NavLink>
+    </li>
 
-              <li>
-                <NavLink to="/dashboard/allproducts">
-                  <MdOutlineProductionQuantityLimits /> Manage Items
-                </NavLink>
-              </li>
+    <li>
+      <NavLink to="/dashboard/allproducts">
+        <MdOutlineProductionQuantityLimits /> Manage Items
+      </NavLink>
+    </li>
 
-              <li>
-                <NavLink to="/dashboard/allorders">
-                  <FaBox /> Orders
-                </NavLink>
-              </li>
+    <li>
+      <NavLink to="/dashboard/allorders">
+        <FaBox /> Orders
+      </NavLink>
+    </li>
 
-              <li>
-                <NavLink to="/dashboard/reports">📊 Reports</NavLink>
-              </li>
+    <li>
+      <NavLink to="/dashboard/reports">
+        📊 Reports
+      </NavLink>
+    </li>
 
-              <li>
-                <NavLink to="/dashboard/categories">📂 Categories</NavLink>
-              </li>
+    
 
-              <li>
-                <NavLink to="/dashboard/paymenthistory">
-                  <FaCreditCard /> Payments
-                </NavLink>
-              </li>
+    <li>
+      <NavLink to="/dashboard/payment-history">
+        <FaCreditCard /> Payments
+      </NavLink>
+    </li>
 
-              <li>
-                <NavLink to="/dashboard/approvedorders">
-                  <FcApproval /> Approved Orders
-                </NavLink>
-              </li>
-            </>
-          )}
+    <li>
+      <NavLink to="/dashboard/approved-orders">
+        <FcApproval /> Approved Orders
+      </NavLink>
+    </li>
 
-          {/* COMMON */}
-          <li className="mt-4">
-            <NavLink to="/dashboard/pendingorders">
-              <MdPendingActions /> Pending Orders
-            </NavLink>
-          </li>
+    <li>
+      <NavLink to="/dashboard/pending-orders">
+        <MdPendingActions /> Pending Orders
+      </NavLink>
+    </li>
+  </>
+)}
+            
+<hr className="my-4" />
+
+<li>
+  <Link to="/" className="font-semibold">
+    🏠 Return Home
+  </Link>
+</li>
 
         </ul>
       </div>

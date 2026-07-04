@@ -28,6 +28,21 @@ const ApprovedOrders = () => {
   });
 
   // ADD TRACKING
+
+  const handleViewTracking = async (id) => {
+  try {
+    const res = await axiosSecure.get(`/allorders/tracking/${id}`);
+
+    setSelectedOrder({
+      tracking: res.data,
+    });
+
+    document.getElementById("viewTracking").showModal();
+  } catch (error) {
+    console.error(error);
+    Swal.fire("Error", "Couldn't load tracking", "error");
+  }
+};
   const handleAddTracking = async e => {
     e.preventDefault();
     const form = e.target;
@@ -38,6 +53,8 @@ const ApprovedOrders = () => {
       status: form.status.value,
       time: new Date().toISOString()
     };
+
+    
 
     const res = await axiosSecure.patch(
       `/allorders/tracking/${selectedOrder._id}`,
@@ -96,17 +113,12 @@ const ApprovedOrders = () => {
                     Add Tracking
                   </button>
 
-                  <button
-                    className="btn btn-sm btn-info"
-                    onClick={() => {
-                      setSelectedOrder(order);
-                      document
-                        .getElementById("viewTracking")
-                        .showModal();
-                    }}
-                  >
-                    View Tracking
-                  </button>
+    <button
+  className="btn btn-sm btn-info"
+  onClick={() => handleViewTracking(order._id)}
+>
+  View Tracking
+</button>
                 </td>
               </tr>
             ))}

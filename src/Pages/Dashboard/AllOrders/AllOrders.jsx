@@ -21,16 +21,12 @@ const AllOrders = () => {
     if (!user?.email) {
       throw new Error("User email missing – query should not have run");
     }
-    const res = await axiosSecure.get(`/neworder?email=${user?.email}`);
+const res = await axiosSecure.get(`/neworder?email=${user?.email}`);
 
-    
-    return res.data.map(neworder => ({
-      ...neworder,
-      normalizedPaymentStatus:
-        typeof neworder.payment_status === 'string'
-          ? neworder.payment_status
-          : neworder.payment_status?.status
-    }));
+return res.data.map(order => ({
+  ...order,
+  normalizedPaymentStatus: order.paymentStatus,
+}));
   }
 });
 

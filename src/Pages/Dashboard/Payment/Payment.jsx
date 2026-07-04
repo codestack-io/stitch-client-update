@@ -23,24 +23,31 @@ const Payment = () => {
   // console.log('products', id);
   // console.log("Route param id:", id);
   // console.log("Products from API:", neworder);
-  const handlePayment =async ()=>{
-    const paymentInfo ={
-    price:(neworder?.result?.orderprice),
-    id: neworder?.result?._id,
-    senderEmail:user?.email,
-    productName: neworder?.result?.productName,
+const handlePayment = async () => {
+const paymentInfo = {
+  price: neworder?.orderprice,
+  id: neworder?._id,
+  senderEmail: user?.email,
+  productName: neworder?.productName,
+};
 
-  }
-  console.log("paymentInfo:", paymentInfo);
+ console.log("paymentInfo", paymentInfo);
+
   try {
     const res = await axiosSecure.post(
-      '/create-checkout-session',
+      "/create-checkout-session",
       paymentInfo
     );
-    console.log(res.data.url);
-    window.location.assign(res.data.url);
+    console.log("Stripe response:", res.data);
+    
+
+    if (res.data?.url) {
+      window.location.assign(res.data.url);
+    } else {
+      console.error("Stripe session URL not found");
+    }
   } catch (err) {
-    console.error(err.response?.data || err);
+    console.error(err);
   }
 };
 
@@ -51,9 +58,9 @@ const Payment = () => {
 
   return (
     <div>
-      <h2>
-  Pay please ${neworder?.result?.orderprice}: {neworder?.result?.productName}
-</h2>
+    <h2>
+    Pay please ${neworder?.orderprice}: {neworder?.productName}
+     </h2>
 
       <button onClick={handlePayment} className='btn btn-primary text-black'>Pay</button>
     </div>

@@ -9,7 +9,7 @@ import ErrorPage from "../Pages/Errorpage/Errorpage";
 import Overview from "../Pages/Dashboard/Overviews/Overviews";
 import MyItems from "../Pages/Dashboard/My Items/My Items";
 import Reports from "../Pages/Dashboard/Reports/Reports";
-import Categories from "../Pages/Dashboard/Categories/Categories";
+
 import Orders from "../Pages/Dashboard/AllOrders/AllOrders";
 import NewOrder from "../Pages/NewOrder/NewOrder";
 import PrivateRoutes from "./PrivateRoutes";
@@ -23,7 +23,7 @@ import AllProducts from "../Pages/Dashboard/AllProducts/AllProducts";
 import EditProducts from "../Pages/Dashboard/EditProducts/EditProducts";
 import ManageUsers from "../Pages/ManageUsers/ManageUsers";
 import AdminRoute from "./AdminRoute";
-
+import Settings from "../Pages/Dashboard/Settings/Settings";
 import AllOrders from "../Pages/Dashboard/AllOrders/AllOrders";
 import Payment from "../Pages/Dashboard/Payment/Payment";
 import PaymentSuccess from "../Pages/Dashboard/Payment/PaymentSuccess";
@@ -162,8 +162,8 @@ export const router = createBrowserRouter([
         path: "payment/:id",
         element: <Payment />,
       },
-      {
-        path: "payment-success",
+     {
+        path: "success",
         element: <PaymentSuccess />,
       },
       {
@@ -171,11 +171,11 @@ export const router = createBrowserRouter([
         element: <PaymentHistory />,
       },
       {
-        path: "pendingorders",
+        path: "pending-orders",
         element: <PendingOrders />,
       },
       {
-        path: "approvedorders",
+        path: "approved-orders",
         element: <ApprovedOrders />,
       },
       {
@@ -194,14 +194,12 @@ export const router = createBrowserRouter([
   path: "reports",
   element: <Reports />,
 },
+
 {
-  path: "categories",
-  element: <Categories />,
+  path: "settings",
+  element: <Settings />,
 },
-{
-  path: "allorders",
-  element: <Orders />,
-},
+
     ],
   },
 ]);

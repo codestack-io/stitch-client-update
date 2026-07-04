@@ -1,26 +1,42 @@
 import React from "react";
 import { FaBoxOpen, FaUsers, FaCheckCircle, FaClock } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../../Components/Hooks/useAxiosSecure";
 
 const Overview = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const { data: stats = {}, isLoading } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/stats");
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
   const cards = [
     {
       title: "Total Orders",
-      value: 120,
+      value: stats.orders,
       icon: <FaBoxOpen className="text-3xl text-blue-600" />,
     },
     {
       title: "Approved Orders",
-      value: 95,
+      value: stats.approvedOrders,
       icon: <FaCheckCircle className="text-3xl text-green-600" />,
     },
     {
       title: "Pending Orders",
-      value: 25,
+      value: stats.pendingOrders,
       icon: <FaClock className="text-3xl text-orange-500" />,
     },
     {
       title: "Users",
-      value: 40,
+      value: stats.users,
       icon: <FaUsers className="text-3xl text-purple-600" />,
     },
   ];
