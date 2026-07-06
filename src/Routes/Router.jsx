@@ -5,7 +5,7 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Auth/Login/page";
 import Register from "../Pages/Auth/Register/page";
 import ServicesSection from "../Pages/Servicesection/Servicesection";
-import ErrorPage from "../Pages/Errorpage/Errorpage";
+import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import Overview from "../Pages/Dashboard/Overviews/Overviews";
 import MyItems from "../Pages/Dashboard/My Items/My Items";
 import Reports from "../Pages/Dashboard/Reports/Reports";
