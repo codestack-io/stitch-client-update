@@ -17,7 +17,7 @@ import ManageItems from "../Pages/Dashboard/AllOrders/AllOrders";
 import AllProductsLayout from "../Layouts/AllProductsLayout";
 import ProductDetails from "../Components/ProductDetails/ProductDetails";
 import DashboardLayout from "../Layouts/DashboardLayout";
-
+import Blogs from "../Pages/Blogs/Blogs";
 import Products from "../Pages/Products/Products";
 import AllProducts from "../Pages/Dashboard/AllProducts/AllProducts";
 import EditProducts from "../Pages/Dashboard/EditProducts/EditProducts";
@@ -44,6 +44,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
+      {
+      path: "blogs",
+      element: <Blogs />,
+     }
     ],
   },
 

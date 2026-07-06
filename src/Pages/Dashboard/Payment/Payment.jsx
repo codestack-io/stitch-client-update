@@ -25,8 +25,8 @@ const Payment = () => {
   // console.log("Products from API:", neworder);
 const handlePayment = async () => {
 const paymentInfo = {
-  price: neworder?.orderprice,
-  id: neworder?._id,
+  price: Number(neworder?.orderprice),
+  orderId: neworder?._id,
   senderEmail: user?.email,
   productName: neworder?.productName,
 };

@@ -41,10 +41,10 @@ const Navbar = () => {
       </li>
 
       <li>
-        <NavLink to="/neworder" className={({ isActive }) =>
+        <NavLink to="/blogs" className={({ isActive }) =>
           `${linkClass} ${isActive ? activeClass : ""}`
         }>
-          New Order
+          Blogs
         </NavLink>
       </li>
 
