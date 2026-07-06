@@ -35,6 +35,8 @@ body {
 
   background: var(--color-bg);
   color: var(--color-text);
+ 
+  font-family: "Urbanist", sans-serif;
 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

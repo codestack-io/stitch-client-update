@@ -1,7 +1,7 @@
 import React from "react";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-
+import { Link } from "react-router-dom";
 import img1 from "../../../assets/cloth.jpg";
 import img2 from "../../../assets/tracker.webp";
 
@@ -33,9 +33,11 @@ const Banner = () => {
                 Fast delivery, trusted service, and premium quality products.
               </p>
 
-              <button className="px-6 py-3 bg-pink-500 hover:bg-pink-600 rounded-xl font-semibold transition">
-                Shop Now
-              </button>
+             <Link to="/products">
+            <button className="px-6 py-3 bg-pink-500 hover:bg-pink-600 rounded-xl font-semibold transition">
+              Shop Now
+            </button>
+            </Link>
             </div>
           </div>
         </div>

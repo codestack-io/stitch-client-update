@@ -15,7 +15,7 @@ const ProductDetails = () => {
 
   if (!model) return <p>Loading...</p>;
 
-  const canOrder = user && role !== "admin" && role !== "manager";
+  
 
   const images = model.images?.length
     ? model.images
@@ -36,6 +36,25 @@ const ProductDetails = () => {
 
     if (model?._id) fetchRelated();
   }, [model?._id]);
+
+  const handleOrder = () => {
+  // User not logged in
+  if (!user) {
+    navigate("/login", {
+      state: { from: `/neworder/${model._id}` },
+    });
+    return;
+  }
+
+  // Admin/Manager cannot order
+  if (role === "admin" || role === "manager") {
+    alert("Admins cannot place orders.");
+    return;
+  }
+
+  // Normal user
+  navigate(`/neworder/${model._id}`);
+};
 
   return (
     <div>
@@ -88,12 +107,11 @@ const ProductDetails = () => {
             </div>
 
             <button
-              disabled={!canOrder}
-              onClick={() => navigate(`/neworder/${model._id}`)}
-              className="w-full bg-pink-500 text-white py-2 rounded-lg disabled:opacity-50"
-            >
-              Order Now
-            </button>
+  onClick={handleOrder}
+  className="w-full bg-pink-500 text-white py-2 rounded-lg"
+>
+  Order Now
+</button>
           </div>
         </div>
 

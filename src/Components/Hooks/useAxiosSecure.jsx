@@ -6,7 +6,7 @@ import UseAuth from './useAuth';
 const axiosSecure = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
-
+console.log(import.meta.env.VITE_API_URL);
 const useAxiosSecure = () => {
   const { user, logOut } = UseAuth();
   const navigate = useNavigate();

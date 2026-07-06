@@ -3,7 +3,7 @@ import Navbar from '../Shared/Navbar/Navbar';
 import Footer from '../Shared/Footer/Footer';
 import { useForm, useWatch } from 'react-hook-form';
 import Container from '../Shared/Container/Container';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import UseAuth from '../../Components/Hooks/useAuth';
 import useAxiosSecure from '../../Components/Hooks/useAxiosSecure';
 import Swal from 'sweetalert2';
@@ -14,6 +14,7 @@ const NewOrder = () => {
 
   const { user } = UseAuth();
   const axiosSecure = useAxiosSecure();
+  console.log("NewOrder component rendered");
 
   const {
     register,
@@ -36,6 +37,7 @@ const NewOrder = () => {
 
     if (id) fetchProduct();
   }, [id]);
+  
 
   // AUTO EMAIL
   useEffect(() => {
@@ -58,41 +60,81 @@ const NewOrder = () => {
   }
 
   // ✅ FIXED STRIPE FLOW
-  const handleNewOrder = async (data) => {
-    const confirmed = await Swal.fire({
-      title: 'Confirm Order',
-      text: `You will pay ${totalPrice} taka for this order`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Pay Now',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#22c55e',
-      cancelButtonColor: '#ef4444',
-      background: '#0f172a',
-      color: '#fff',
-    });
+const handleNewOrder = async (data) => {
+  console.log("1. handleNewOrder called");
 
-    if (!confirmed.isConfirmed) return;
+  const confirmed = await Swal.fire({
+    title: "Confirm Order",
+    text: `You will pay ${totalPrice} taka`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, Pay Now",
+    cancelButtonText: "Cancel",
+  });
 
-    try {
-      const res = await axiosSecure.post('/create-checkout-session', {
-        productName: model.productName,
-        price: totalPrice,
-        senderEmail: data.email,
-        productId: id,   // ✅ FIXED (important)
+  console.log("2. Swal finished", confirmed);
+
+  if (!confirmed.isConfirmed) {
+    console.log("3. User cancelled");
+    return;
+  }
+
+  console.log("4. User confirmed");
+
+  try {
+    console.log("5. Sending request...");
+
+   // 1. Save Order
+const order = {
+  email: data.email,
+  firstName: data.firstName,
+  lastName: data.lastName,
+  paymentMethod: data.paymentMethod,
+  orderQuantity: Number(data.orderQuantity),
+  deliveryAddress: data.deliveryAddress,
+
+  productName: model.productName,
+  productId: id,
+
+  paymentStatus: "unpaid",
+  productStatus: "Pending",
+};
+
+const orderRes = await axiosSecure.post("/neworder", order);
+
+const orderId = orderRes.data.result.insertedId;
+
+// 2. Create Stripe Session
+const res = await axiosSecure.post("/create-checkout-session", {
+  orderId,
+  productName: model.productName,
+  price: totalPrice,
+  senderEmail: data.email,
+});
+
+window.location.href = res.data.url;
+
+    console.log("6. Backend response:", res.data);
+
+    if (res.data.url) {
+      console.log("7. Redirecting to Stripe...");
+      window.location.href = res.data.url;
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "No Stripe URL received",
       });
-
-      if (res.data.url) {
-        window.location.href = res.data.url;
-      } else {
-        Swal.fire('Error', 'Stripe session failed', 'error');
-      }
-    } catch (err) {
-      console.log(err);
-      Swal.fire('Error', 'Payment initiation failed', 'error');
     }
-  };
+  } catch (err) {
+    console.log("ERROR:", err);
 
+    Swal.fire({
+      icon: "error",
+      title: "Checkout Failed",
+      text: err.response?.data?.message || err.message,
+    });
+  }
+};
   return (
     <Container>
       <Navbar />
@@ -101,7 +143,14 @@ const NewOrder = () => {
         Create new order
       </h2>
 
-      <form onSubmit={handleSubmit(handleNewOrder)} className="mt-5 p-4 text-black">
+<form
+  onSubmit={handleSubmit(
+    handleNewOrder,
+    (errors) => {
+      console.log(errors);
+    }
+  )}
+>
 
         {/* PRODUCT TYPE */}
         <div>
@@ -183,11 +232,12 @@ const NewOrder = () => {
           <input {...register('deliveryAddress')} placeholder="Address" className="input" />
         </div>
 
-        <input
-          type="submit"
-          value="Create Order"
-          className="btn btn-primary mt-4"
-        />
+  <button
+  type="submit"
+  className="btn btn-primary mt-4"
+>
+  Create Order
+</button>
       </form>
 
       <Footer />
