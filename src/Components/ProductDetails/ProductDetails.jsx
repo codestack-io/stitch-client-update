@@ -13,13 +13,9 @@ const ProductDetails = () => {
   const [activeImage, setActiveImage] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
-  if (!model) return <p>Loading...</p>;
-
-  
-
-  const images = model.images?.length
+  const images = model?.images?.length
     ? model.images
-    : [model.productImage];
+    : [model?.productImage];
 
   useEffect(() => {
     const fetchRelated = async () => {
@@ -36,6 +32,8 @@ const ProductDetails = () => {
 
     if (model?._id) fetchRelated();
   }, [model?._id]);
+
+  if (!model) return <p>Loading...</p>;
 
   const handleOrder = () => {
   // User not logged in
