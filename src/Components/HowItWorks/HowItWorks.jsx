@@ -21,7 +21,7 @@ const HowItWorks = () => {
   useEffect(() => {
   console.log("Fetching steps...");
 
-  fetch("http://localhost:5000/steps")
+  fetch(`${import.meta.env.VITE_API_URL}/steps`)
     .then((res) => {
       console.log("Response status:", res.status);
       return res.json();
