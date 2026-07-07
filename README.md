@@ -1,3 +1,16 @@
+![React](https://img.shields.io/badge/React-19-blue)
+
+![NodeJS](https://img.shields.io/badge/NodeJS-Express-green)
+
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-brightgreen)
+
+![Firebase](https://img.shields.io/badge/Firebase-Authentication-orange)
+
+![Stripe](https://img.shields.io/badge/Stripe-Payment-purple)
+
+![License](https://img.shields.io/badge/license-MIT-blue)
+
+
 # 🧵 Stitch Track
 
 A full-stack garment order and production tracking system that helps garment factories manage orders, production, payment, and delivery efficiently.
