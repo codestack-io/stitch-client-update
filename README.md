@@ -1,16 +1,141 @@
-# React + Vite
+# 🧵 Stitch Track
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack garment order and production tracking system that helps garment factories manage orders, production, payment, and delivery efficiently.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Frontend: https://stitch-client-update.vercel.app
 
-## React Compiler
+Backend API: https://stitch-server-upgrade.onrender.com
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📌 Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔐 Firebase Authentication
+- 👤 Role-based Dashboard (Admin & User)
+- 📦 Product Management
+- 🛒 Place New Orders
+- 💳 Stripe Payment Integration
+- 📍 Order Tracking
+- 📊 Dashboard Statistics
+- 🔍 Search & Filter Orders
+- 📱 Fully Responsive Design
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- React
+- React Router
+- Tailwind CSS
+- DaisyUI
+- React Query
+- Axios
+- Firebase Authentication
+- React Hook Form
+- React Toastify
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB
+- Firebase Admin SDK
+- Stripe API
+- JWT Authentication
+- Render
+
+---
+
+## 📂 Main Pages
+
+### Public
+
+- Home
+- Products
+- Product Details
+- Login
+- Register
+
+### Dashboard
+
+- Overview
+- My Orders
+- Payment History
+- Manage Users (Admin)
+- All Orders (Admin)
+- Product Tracking
+- Reports
+
+---
+
+## 🔐 Authentication
+
+- Email & Password Login
+- Google Login
+- Protected Routes
+- Firebase Token Verification
+- Role-based Authorization
+
+---
+
+## 💳 Payment
+
+- Stripe Checkout
+- Payment History
+- Transaction ID
+- Tracking ID Generation
+
+---
+
+## 📦 Order Workflow
+
+Pending
+
+⬇️
+
+Approved
+
+⬇️
+
+Production
+
+⬇️
+
+Completed
+
+⬇️
+
+Delivered
+
+---
+
+## ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone https://github.com/codestack-io/stitch-client-update -Client repo
+git clone https://github.com/codestack-io/stitch-server-upgrade -server repo
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run frontend
+
+```bash
+npm run dev
+```
+
+
+
+## 👩‍💻 Author
+
+Antara Saha
