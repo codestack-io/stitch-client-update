@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router';
 import Footer from '../Pages/Shared/Footer/Footer';
 import Navbar from '../Pages/Shared/Navbar/Navbar';
-import AuthProvider from '../Components/Context/AuthContext/authProvider';
+import AuthProvider from '../Components/Context/AuthContext/AuthProvider';
 
 const RootLayout = () => {
     return (
